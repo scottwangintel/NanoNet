@@ -143,7 +143,13 @@ if __name__ == "__main__":
     params["img_channels"] = 3
     params["mask_channels"] = 1
 
-    model = NanoNet_C(params)
+    # Correctly extract the input shape from the params dictionary
+    input_shape = (params["img_height"], params["img_width"], params["img_channels"])
+
+    # Pass the input_shape tuple to the model function
+    model = NanoNet_C(input_shape)
+
+    #model = NanoNet_C(params)
     model.summary()
 
     session = tf.compat.v1.Session()
@@ -151,12 +157,12 @@ if __name__ == "__main__":
 
     with graph.as_default():
         with session.as_default():
-            model = NanoNet_A(params)
+            model = NanoNet_A(input_shape)
             run_meta = tf.compat.v1.RunMetadata()
             opts = tf.compat.v1.profiler.ProfileOptionBuilder.float_operation()
 
             # Optional: save printed results to file
-            flops_log_path = 'files/tf_flops_log.txt'
+            flops_log_path = './tf_flops_log.txt'
             opts['output'] = 'file:outfile={}'.format(flops_log_path)
 
             # We use the Keras session graph in the call to the profiler.

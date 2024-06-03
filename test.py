@@ -46,7 +46,8 @@ if __name__ == "__main__":
     tf.random.set_seed(42)
 
     """ Load dataset """
-    path = "../../Kvasir-SEG/"
+    #path = "../../Kvasir-SEG/"
+    path = "../../Dataset/Kvasir-SEG/"
     (train_x, train_y), (test_x, test_y) = load_data(path)
 
     """ Hyperparameters """

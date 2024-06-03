@@ -1,0 +1,9 @@
+
+Doc:
+op: The nodes are operation kernel type, such as MatMul, Conv2D. Graph nodes belonging to the same type are aggregated together.
+flops: Number of float operations. Note: Please read the implementation for the math behind it.
+
+Profile:
+node name | # float_ops
+Mul                      970.60k float_ops (100.00%, 97.85%)
+Sub                      21.29k float_ops (2.15%, 2.15%)
