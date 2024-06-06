@@ -70,6 +70,10 @@ if __name__ == "__main__":
     metrics_score = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     time_taken = []
 
+    dir_path = os.path.join(".", "results", model_name, "masks")
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
     for i, (x, y) in enumerate(zip(test_x, test_y)):
         name = y.split("/")[-1].split(".")[0]
 
@@ -117,7 +121,15 @@ if __name__ == "__main__":
         ]
 
         cat_images = np.concatenate(tmp, axis=1)
-        cv2.imwrite(f"results/{model_name}/{name}.png", cat_images)
+        fnn = os.path.join(".", "results", model_name, f"{name}.png")
+        print("Write to file name", fnn)
+        try:
+            success = cv2.imwrite(fnn, cat_images)
+            if not success:
+                raise Exception(f"Could not write image to {fnn}")
+        except Exception as e:
+            print(f"Exception occurred: {e}")
+    
 
     jaccard = metrics_score[0]/len(test_x)
     f1 = metrics_score[1]/len(test_x)
