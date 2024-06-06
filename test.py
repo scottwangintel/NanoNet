@@ -74,6 +74,7 @@ if __name__ == "__main__":
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
+    cnt = 0
     for i, (x, y) in enumerate(zip(test_x, test_y)):
         name = y.split("/")[-1].split(".")[0]
 
@@ -141,36 +142,30 @@ if __name__ == "__main__":
         # Convert the binary mask to uint8 type and scale it to the range [0, 255]
         pred_y_saved = np.array(pred_y_saved, dtype=np.uint8) * 255
 
-        # Step 1: Convert the binary mask to a 3-channel image (if needed)
-        pred_y_3ch = cv2.cvtColor(pred_y_saved, cv2.COLOR_GRAY2BGR)
+        # Create an RGBA image with the original image and an alpha channel
+        ori_img_rgba = cv2.cvtColor(ori_img, cv2.COLOR_BGR2BGRA)
 
-        # Step 2: Normalize the mask to be in the range [0, 1] for blending
-        pred_y_3ch = pred_y_3ch / 255.0
+        # Choose a color for the mask, e.g., yellow (BGR format)
+        mask_color = [0, 255, 255, 128]  # BGR format for yellow and 128 for alpha (semi-transparent)
 
-        # Step 3: Choose a color for the mask, e.g., red
-        mask_color = [0, 0, 255]  # BGR format for red
+        # Create a colored mask with the same size as the original image
+        colored_mask = np.zeros_like(ori_img_rgba, dtype=np.uint8)
 
-        # Step 4: Apply the color to the mask
-        colored_mask = np.zeros_like(pred_y_3ch)
-        colored_mask[:, :] = mask_color
-        colored_mask = colored_mask * pred_y_3ch
+        # Apply the mask color only to the areas where pred_y_saved is True
+        mask_indices = np.where(pred_y_saved == 255)
+        colored_mask[mask_indices[0], mask_indices[1], :3] = mask_color[:3]  # Apply color to the mask area
+        colored_mask[mask_indices[0], mask_indices[1], 3] = mask_color[3]    # Apply alpha to the mask area
 
-        # Step 5: Superimpose the mask onto the original image
-        # You can adjust the alpha value to make the mask more or less transparent
-
-        # Ensure that both colored_mask and ori_img are of the same data type, typically np.uint8
-        colored_mask = np.array(colored_mask, dtype=np.uint8)
-        ori_img = np.array(ori_img, dtype=np.uint8)
-
-        # Now you can blend the images together
-        alpha = 0.5  # Adjust the transparency of the overlay
-        superimposed_img = cv2.addWeighted(colored_mask, alpha, ori_img, 1 - alpha, 0)
-
-
-        # Step 6: Save the superimposed image to a file
+        # Superimpose the mask onto the original image
+        superimposed_img = cv2.addWeighted(colored_mask, 1, ori_img_rgba, 1, 0)
+        # Save the superimposed image to a file
         output_filename = f"{name}_overlay.png"
         output_filepath = os.path.join("results", model_name, output_filename)
-        cv2.imwrite(output_filepath, superimposed_img * 255)  # Multiply by 255 if the original image was normalized
+        cv2.imwrite(output_filepath, superimposed_img)
+
+        cnt = cnt + 1
+        if cnt > 1:
+            break
 
     
 
