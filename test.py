@@ -105,8 +105,10 @@ if __name__ == "__main__":
         metrics_score = list(map(add, metrics_score, score))
 
         """ Saving masks """
+        pred_y_saved = pred_y
         pred_y = pred_y[0] > 0.5
         pred_y = pred_y * 255
+
         pred_y = np.array(pred_y, dtype=np.uint8)
 
         ori_img = ori_img
@@ -129,6 +131,47 @@ if __name__ == "__main__":
                 raise Exception(f"Could not write image to {fnn}")
         except Exception as e:
             print(f"Exception occurred: {e}")
+
+        # Assuming pred_y is a binary mask after thresholding
+        # and ori_img is the original image read with cv2.IMREAD_COLOR
+
+        # Ensure pred_y_saved is a binary mask with values 0 or 1
+        pred_y_saved = pred_y_saved[0] > 0.5
+
+        # Convert the binary mask to uint8 type and scale it to the range [0, 255]
+        pred_y_saved = np.array(pred_y_saved, dtype=np.uint8) * 255
+
+        # Step 1: Convert the binary mask to a 3-channel image (if needed)
+        pred_y_3ch = cv2.cvtColor(pred_y_saved, cv2.COLOR_GRAY2BGR)
+
+        # Step 2: Normalize the mask to be in the range [0, 1] for blending
+        pred_y_3ch = pred_y_3ch / 255.0
+
+        # Step 3: Choose a color for the mask, e.g., red
+        mask_color = [0, 0, 255]  # BGR format for red
+
+        # Step 4: Apply the color to the mask
+        colored_mask = np.zeros_like(pred_y_3ch)
+        colored_mask[:, :] = mask_color
+        colored_mask = colored_mask * pred_y_3ch
+
+        # Step 5: Superimpose the mask onto the original image
+        # You can adjust the alpha value to make the mask more or less transparent
+
+        # Ensure that both colored_mask and ori_img are of the same data type, typically np.uint8
+        colored_mask = np.array(colored_mask, dtype=np.uint8)
+        ori_img = np.array(ori_img, dtype=np.uint8)
+
+        # Now you can blend the images together
+        alpha = 0.5  # Adjust the transparency of the overlay
+        superimposed_img = cv2.addWeighted(colored_mask, alpha, ori_img, 1 - alpha, 0)
+
+
+        # Step 6: Save the superimposed image to a file
+        output_filename = f"{name}_overlay.png"
+        output_filepath = os.path.join("results", model_name, output_filename)
+        cv2.imwrite(output_filepath, superimposed_img * 255)  # Multiply by 255 if the original image was normalized
+
     
 
     jaccard = metrics_score[0]/len(test_x)
