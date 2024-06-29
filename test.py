@@ -163,9 +163,6 @@ if __name__ == "__main__":
         output_filepath = os.path.join("results", model_name, output_filename)
         cv2.imwrite(output_filepath, superimposed_img)
 
-        cnt = cnt + 1
-        if cnt > 1:
-            break
 
     
 
