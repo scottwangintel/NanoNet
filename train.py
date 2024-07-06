@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # os.system("rm -r logs")
 
     """ Hyperparameters """
-    input_shape = (256, 256, 3)
+    input_shape = (3, 256, 256)
     batch_size = 8
     lr = 1e-4
     epochs = 200
