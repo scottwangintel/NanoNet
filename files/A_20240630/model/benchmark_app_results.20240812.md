@@ -1,3 +1,55 @@
+[toc]
+
+# System Info
+```
+Name                           NumberOfCores MaxClockSpeed
+----                           ------------- -------------
+Intel(R) Core(TM) Ultra 5 125H            14          3600
+
+
+PS C:\Users\conte> Get-WmiObject -Class Win32_VideoController | Format-List AcceleratorCapabilities, AdapterCompatibility, AdapterDACType, AdapterRAM, Availability, CapabilityDescriptions, Caption, DeviceID, DriverDate, DriverVersion
+
+
+AcceleratorCapabilities :
+AdapterCompatibility    : Intel Corporation
+AdapterDACType          : Internal
+AdapterRAM              : 134217728
+Availability            : 3
+CapabilityDescriptions  :
+Caption                 : Intel(R) Arc(TM) Graphics
+DeviceID                : VideoController1
+DriverDate              : 20240327000000.000000-000
+DriverVersion           : 31.0.101.5382
+```
+
+
+Certainly! Below is a summary of the results presented in a Markdown table:
+
+| Device Type | Model Loading Time (ms) | Model Reshaping Time (ms) | Compile Model Time (ms) | First Inference Time (ms) | Total Iterations | Total Duration (ms) | Latency (ms) | Throughput (FPS) |
+|--------------|--------------------------|---------------------------|-------------------------|----------------------|-------------------|--------------------|----------------|-------------------|
+| CPU          | 15.20                    | 15.07                     | 111.41                  | 14.61                | 1668              | 10042.46            | Median: 20.76   | 166.09            |
+|              |                          |                            |                         |                      |                   |                    | Average: 23.91  |                   |
+|              |                          |                            |                         |                      |                   |                    | Min: 11.55       |                   |
+|              |                          |                            |                         |                      |                   |                    | Max: 90.43       |                   |
+| GPU          | 17.66                    | 0.00                      | 8119.39*                | 7.20                 | 3576              | 10029.86            | Median: 10.73   | 356.54            |
+|              |                          |                            |                         |                      |                   |                    | Average: 11.14  |                   |
+|              |                          |                            |                         |                      |                   |                    | Min: 5.41        |                   |
+|              |                          |                            |                         |                      |                   |                    | Max: 16.54       |                   |
+| NPU          | 14.19                    | 6.00                      | 1180.63                 | 51.11                | 932               | 10074.51            | Median: 42.83   | 92.51             |
+|              |                          |                            |                         |                      |                   |                    | Average: 43.03  |                   |
+|              |                          |                            |                         |                      |                   |                    | Min: 22.87       |                   |
+|              |                          |                            |                         |                      |                   |                    | Max: 74.75       |                   |
+
+**Notes:**
+- The GPU compile model time is unusually long (8119.39 ms); this might be an error in the reported time or could indicate an issue with the GPU driver or setup.
+- FPS (Frames Per Second) is a key indicator of the inference speed; the GPU shows significantly higher throughput compared to the CPU and NPU.
+- The latency times include the median, average, minimum, and maximum latency, providing insight into the distribution of inference times and helping to assess model performance under different conditions.
+
+This table summarizes the performance metrics for the model across CPU, GPU, and NPU devices, providing a clear comparison to aid in hardware selection for deployment.
+
+
+
+# Results
 
 ```
 
