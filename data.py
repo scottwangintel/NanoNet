@@ -44,6 +44,25 @@ def read_mask(path):
     x = x.astype(np.float32)
     return x
 
+def read_mask2(path):
+    path = path.decode()
+    # Read the image in grayscale
+    x_int = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    # Resize the image
+    x_int = cv2.resize(x_int, (W, H))
+    
+    # Normalize the image to get floating-point values ranging from 0.0 to 1.0
+    x = x_int / 255.0
+    # Add a new axis to create a single-channel image
+    x = np.expand_dims(x, axis=-1)
+    x_int = np.expand_dims(x_int, axis=-1)
+
+    # Ensure the data type is float32
+    x = x.astype(np.float32)
+    
+    # Return both the normalized and the original integer images
+    return x, x_int
+
 def tf_parse(x, y):
     def _parse(x, y):
         x = read_image(x)
