@@ -37,7 +37,7 @@ if __name__ == "__main__":
     create_dir(f"files/{model_name}")
 
     """ Dataset """
-    path = "../../Dataset/Kvasir-SEG/"
+    path = "../../Dataset/KvasirCapsule-SEG/"
     (train_x, train_y), (valid_x, valid_y) = load_data(path)
 
     train_dataset = tf_dataset(train_x, train_y, batch=batch_size)
