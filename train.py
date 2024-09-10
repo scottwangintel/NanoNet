@@ -27,7 +27,7 @@ if __name__ == "__main__":
     input_shape = (256, 256, 3)
     batch_size = 8
     lr = 1e-4
-    epochs = 200
+    epochs = 20
     model_name = "A"
     model_path = f"files/{model_name}/model.h5"
     csv_path = f"files/{model_name}/model.csv"
