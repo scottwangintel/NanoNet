@@ -27,7 +27,7 @@ if __name__ == "__main__":
     input_shape = (256, 256, 3)
     batch_size = 8
     lr = 1e-4
-    epochs = 200
+    epochs = 100
     model_name = "A"
     model_path = f"files/{model_name}/model.h5"
     csv_path = f"files/{model_name}/model.csv"
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     create_dir(f"files/{model_name}")
 
     """ Dataset """
-    path = "../../Dataset/Kvasir-SEG/"
+    path = "../../Dataset/kvasir-instrument/"
     (train_x, train_y), (valid_x, valid_y) = load_data(path)
 
     train_dataset = tf_dataset(train_x, train_y, batch=batch_size)

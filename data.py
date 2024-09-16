@@ -15,12 +15,12 @@ def load_names(path, file_path):
     f = open(file_path, "r")
     data = f.read().split("\n")[:-1]
     images = [os.path.join(path,"images", name) + ".jpg" for name in data]
-    masks = [os.path.join(path,"masks", name) + ".jpg" for name in data]
+    masks = [os.path.join(path,"masks", name) + ".png" for name in data]
     return images, masks
 
 def load_data(path):
     train_names_path = f"{path}/train.txt"
-    valid_names_path = f"{path}/val.txt"
+    valid_names_path = f"{path}/test.txt"
 
     train_x, train_y = load_names(path, train_names_path)
     valid_x, valid_y = load_names(path, valid_names_path)
